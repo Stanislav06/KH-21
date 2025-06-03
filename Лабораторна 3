@@ -1,0 +1,24 @@
+import copy
+
+class Car:
+    def __init__(self, brand, model, options=None):
+        self.brand = brand
+        self.model = model
+        self.options = options or []
+
+    def add_option(self, option):
+        self.options.append(option)
+
+    def __str__(self):
+        return f"{self.brand} {self.model} ({', '.join(self.options)})"
+
+    def clone(self):
+        return copy.deepcopy(self)
+
+if __name__ == "__main__":
+    original_car = Car("Tesla", "Model 3", ["Standard Range"])
+    print("Original:", original_car)
+    cloned_car = original_car.clone()
+    cloned_car.add_option("Full Self-Driving")
+    print("Cloned:", cloned_car)
+    print("Original after cloning:", original_car)
