@@ -1,0 +1,46 @@
+# Демонстрація принципів SOLID (S - Single Responsibility, O - Open/Closed)
+
+class User:
+    def __init__(self, username: str, email: str):
+        self.username = username
+        self.email = email
+
+class UserRepository:
+    """
+    S: Single Responsibility Principle
+    UserRepository відповідає лише за зберігання та отримання користувачів
+    """
+    def __init__(self):
+        self._users = []
+    def add_user(self, user: User):
+        self._users.append(user)
+    def get_users(self):
+        return self._users
+
+class UserPrinter:
+    """
+    O: Open/Closed Principle
+    UserPrinter можна розширити новими форматами виводу без зміни існуючого коду
+    """
+    def print(self, user: User):
+        print(f"User: {user.username} | Email: {user.email}")
+
+class UserCSVPrinter(UserPrinter):
+    def print(self, user: User):
+        print(f"{user.username},{user.email}")
+
+# Демонстрація роботи
+if __name__ == "__main__":
+    repo = UserRepository()
+    repo.add_user(User("Anna", "anna@email.com"))
+    repo.add_user(User("Oleh", "oleh@email.com"))
+
+    printer = UserPrinter()
+    csv_printer = UserCSVPrinter()
+
+    print("-- Standard Output --")
+    for user in repo.get_users():
+        printer.print(user)
+    print("-- CSV Output --")
+    for user in repo.get_users():
+        csv_printer.print(user)
