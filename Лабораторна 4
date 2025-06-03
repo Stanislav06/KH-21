@@ -1,0 +1,64 @@
+# Composite pattern
+class Component:
+    def operation(self):
+        pass
+
+class Leaf(Component):
+    def __init__(self, name):
+        self.name = name
+    def operation(self):
+        return f"Leaf {self.name}"
+
+class Composite(Component):
+    def __init__(self, name):
+        self.name = name
+        self.children = []
+    def add(self, component):
+        self.children.append(component)
+    def operation(self):
+        results = [child.operation() for child in self.children]
+        return f"Composite {self.name} [{'; '.join(results)}]"
+
+class CPU:
+    def freeze(self):
+        print("CPU: freezing")
+    def jump(self, position):
+        print(f"CPU: jump to {position}")
+    def execute(self):
+        print("CPU: execute")
+
+class Memory:
+    def load(self, position, data):
+        print(f"Memory: load {data} to {position}")
+
+class HardDrive:
+    def read(self, lba, size):
+        return f"data_from_sector_{lba}"
+
+class ComputerFacade:
+    def __init__(self):
+        self.cpu = CPU()
+        self.memory = Memory()
+        self.hard_drive = HardDrive()
+    def start(self):
+        self.cpu.freeze()
+        data = self.hard_drive.read(100, 512)
+        self.memory.load(100, data)
+        self.cpu.jump(100)
+        self.cpu.execute()
+
+if __name__ == "__main__":
+    root = Composite("root")
+    leaf1 = Leaf("A")
+    leaf2 = Leaf("B")
+    sub = Composite("subtree")
+    sub.add(Leaf("C"))
+    sub.add(Leaf("D"))
+    root.add(leaf1)
+    root.add(sub)
+    root.add(leaf2)
+    print(root.operation())
+
+    print("\n--- Facade ---")
+    computer = ComputerFacade()
+    computer.start()
